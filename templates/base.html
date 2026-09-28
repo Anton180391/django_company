@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Компания{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <a href="{% url 'employees:home' %}">🏠 Главная</a>
+            <a href="{% url 'employees:employee_list' %}">👥 Сотрудники</a>
+            {% if user.is_authenticated %}
+                <span style="margin-left:auto;">👤 {{ user.username }}</span>
+                <a href="{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href="{% url 'login' %}" style="margin-left:auto;">🔑 Войти</a>
+            {% endif %}
+        </nav>
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

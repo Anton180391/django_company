@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}{{ employee.last_name }} {{ employee.first_name }}{% endblock %}
+
+{% block content %}
+    <div class="employee-detail">
+        <h1>{{ employee.last_name }} {{ employee.first_name }} {{ employee.patronymic }}</h1>
+
+        <p style="margin: 15px 0; color: #94a3b8;">
+            <strong>Пол:</strong> {{ employee.get_gender_display }}
+        </p>
+
+        {% if employee.workplace %}
+            <p style="margin: 15px 0; color: #94a3b8;">
+                <strong>Рабочее место:</strong> Стол №{{ employee.workplace.desk_number }}
+            </p>
+        {% endif %}
+
+        <h2 style="margin-top:30px;">Навыки</h2>
+        {% if employee.skill_levels.all %}
+            <ul style="list-style:none;">
+                {% for skill_level in employee.skill_levels.all %}
+                    <li style="margin: 10px 0;">
+                        <span class="skill-tag">{{ skill_level.skill.name }}</span>
+                        <span style="color:#06b6d4; font-weight:600;">
+                            {{ skill_level.level }}/10
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color:#64748b;">Навыки не указаны.</p>
+        {% endif %}
+
+        {% if employee.description %}
+            <h2 style="margin-top:30px;">Описание</h2>
+            <p style="color:#cbd5e1; line-height:1.7;">{{ employee.description|linebreaks }}</p>
+        {% endif %}
+
+        {% if employee.images.all %}
+            <h2 style="margin-top:30px;">Галерея</h2>
+            <div class="gallery">
+                {% for img in employee.images.all %}
+                    <div>
+                        <img src="{{ img.image.url }}" alt="Фото {{ forloop.counter }}">
+                        <p class="photo-order">#{{ img.order }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="margin-top:30px;">
+            <a href="{% url 'employees:employee_list' %}" class="btn">← К списку</a>
+        </div>
+    </div>
+{% endblock %}

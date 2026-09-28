@@ -1,0 +1,12 @@
+<a href="{% url 'employees:employee_detail' employee.pk %}" class="employee-card">
+    <div class="employee-name">
+        {{ employee.last_name }} {{ employee.first_name }}
+    </div>
+    <div class="employee-skills">
+        {% for skill_level in employee.skill_levels.all %}
+            <span class="skill-tag">{{ skill_level.skill.name }}</span>
+        {% empty %}
+            <span style="color:#64748b;">Нет навыков</span>
+        {% endfor %}
+    </div>
+</a>

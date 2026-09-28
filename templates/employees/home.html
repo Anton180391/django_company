@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Главная — Компания{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать в нашу компанию!</h1>
+    <p style="color:#94a3b8; margin-bottom:30px;">
+        Мы — команда профессионалов. Здесь вы можете познакомиться с нашими сотрудниками
+        и узнать об их навыках.
+    </p>
+
+    <h2>Наши сотрудники</h2>
+
+    {% if employees %}
+        <div class="cards-grid">
+            {% for employee in employees %}
+                {% include "employees/_card.html" %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="color:#64748b;">Пока нет сотрудников.</p>
+    {% endif %}
+
+    <div style="margin-top:30px;">
+        <a href="{% url 'employees:employee_list' %}" class="btn">Посмотреть всех →</a>
+    </div>
+{% endblock %}

@@ -1,12 +1,19 @@
 from django.contrib import admin
 
-from .models import Employee, Skill, SkillLevel
+from .models import Employee, EmployeeImage, Skill, SkillLevel
 
 
 class SkillLevelInline(admin.TabularInline):
     """Инлайн для редактирования навыков прямо на странице сотрудника."""
 
     model = SkillLevel
+    extra = 1
+
+
+class EmployeeImageInline(admin.TabularInline):
+    """Инлайн для галереи изображений сотрудника."""
+
+    model = EmployeeImage
     extra = 1
 
 
@@ -21,7 +28,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_display = ("id", "last_name", "first_name", "gender", "workplace")
     list_filter = ("gender", "workplace")
     search_fields = ("last_name", "first_name", "patronymic")
-    inlines = [SkillLevelInline]
+    inlines = [SkillLevelInline, EmployeeImageInline]
 
 
 @admin.register(SkillLevel)
@@ -29,3 +36,9 @@ class SkillLevelAdmin(admin.ModelAdmin):
     list_display = ("id", "employee", "skill", "level")
     list_filter = ("skill", "level")
     search_fields = ("employee__last_name", "skill__name")
+
+
+@admin.register(EmployeeImage)
+class EmployeeImageAdmin(admin.ModelAdmin):
+    list_display = ("id", "employee", "order", "image")
+    list_filter = ("employee",)

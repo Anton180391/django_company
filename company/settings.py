@@ -56,7 +56,7 @@ ROOT_URLCONF = "company.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -116,7 +116,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"] if (BASE_DIR / "static").exists() else []
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files (загруженные пользователями)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Email
