@@ -3,7 +3,7 @@
 {% block title %}Все сотрудники{% endblock %}
 
 {% block content %}
-    <h1>Все сотрудники</h1>
+    <h1>Все сотрудники ({{ page_obj.paginator.count }})</h1>
 
     {% if employees %}
         <div class="cards-grid">
@@ -12,7 +12,6 @@
             {% endfor %}
         </div>
 
-        {# Пагинация #}
         {% if is_paginated %}
             <div style="margin-top:30px; text-align:center;">
                 {% if page_obj.has_previous %}

@@ -4,12 +4,16 @@
 
 {% block content %}
     <h1>Добро пожаловать в нашу компанию!</h1>
-    <p style="color:#94a3b8; margin-bottom:30px;">
+    <p style="color:#94a3b8; margin-bottom:20px;">
         Мы — команда профессионалов. Здесь вы можете познакомиться с нашими сотрудниками
         и узнать об их навыках.
     </p>
 
-    <h2>Наши сотрудники</h2>
+    <div class="counter-badge">
+        👥 Всего сотрудников: <strong>{{ employees_count }}</strong>
+    </div>
+
+    <h2>Последние принятые сотрудники</h2>
 
     {% if employees %}
         <div class="cards-grid">
@@ -18,7 +22,7 @@
             {% endfor %}
         </div>
     {% else %}
-        <p style="color:#64748b;">Пока нет сотрудников.</p>
+        <p style="color:#64748b;">Пока нет сотрудников с указанной датой приёма.</p>
     {% endif %}
 
     <div style="margin-top:30px;">

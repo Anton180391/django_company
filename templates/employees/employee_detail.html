@@ -1,22 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}{{ employee.last_name }} {{ employee.first_name }}{% endblock %}
+{% block title %}{{ employee.full_name }}{% endblock %}
 
 {% block content %}
     <div class="employee-detail">
-        <h1>{{ employee.last_name }} {{ employee.first_name }} {{ employee.patronymic }}</h1>
+        <div class="detail-header">
+            {% if employee.main_image %}
+                <img
+                    src="{{ employee.main_image.image.url }}"
+                    alt="{{ employee.full_name }}"
+                    class="detail-main-image"
+                >
+            {% else %}
+                <div class="detail-main-image-placeholder">👤</div>
+            {% endif %}
 
-        <p style="margin: 15px 0; color: #94a3b8;">
-            <strong>Пол:</strong> {{ employee.get_gender_display }}
-        </p>
+            <div class="detail-info">
+                <h1>{{ employee.full_name }}</h1>
 
-        {% if employee.workplace %}
-            <p style="margin: 15px 0; color: #94a3b8;">
-                <strong>Рабочее место:</strong> Стол №{{ employee.workplace.desk_number }}
-            </p>
-        {% endif %}
+                <p class="detail-row">
+                    <strong>Пол:</strong> {{ employee.get_gender_display }}
+                </p>
 
-        <h2 style="margin-top:30px;">Навыки</h2>
+                {% if employee.workplace %}
+                    <p class="detail-row">
+                        <strong>Рабочее место:</strong> Стол №{{ employee.workplace.desk_number }}
+                    </p>
+                {% endif %}
+
+                <p class="detail-row">
+                    <strong>Стаж:</strong> {{ employee.experience_days }} дн.
+                </p>
+            </div>
+        </div>
+
+        <h2>Навыки</h2>
         {% if employee.skill_levels.all %}
             <ul style="list-style:none;">
                 {% for skill_level in employee.skill_levels.all %}
@@ -37,12 +55,12 @@
             <p style="color:#cbd5e1; line-height:1.7;">{{ employee.description|linebreaks }}</p>
         {% endif %}
 
-        {% if employee.images.all %}
+        {% if employee.other_images %}
             <h2 style="margin-top:30px;">Галерея</h2>
             <div class="gallery">
-                {% for img in employee.images.all %}
+                {% for img in employee.other_images %}
                     <div>
-                        <img src="{{ img.image.url }}" alt="Фото {{ forloop.counter }}">
+                        <img src="{{ img.image.url }}" alt="Фото {{ img.order }}">
                         <p class="photo-order">#{{ img.order }}</p>
                     </div>
                 {% endfor %}
