@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+    <div class="auth-container">
+        <div class="auth-icon">🔑</div>
+        <h2>Вход</h2>
+
+        {% if form.errors %}
+            <p style="color: #fca5a5; text-align: center; margin-bottom: 15px;">
+                Неверный логин или пароль. Попробуйте снова.
+            </p>
+        {% endif %}
+
+        <form method="POST" class="auth-form">
+            {% csrf_token %}
+            <label for="id_username">Логин</label>
+            <input type="text" name="username" id="id_username" placeholder="Введите логин" required autofocus>
+
+            <label for="id_password">Пароль</label>
+            <input type="password" name="password" id="id_password" placeholder="Введите пароль" required>
+
+            <button type="submit" class="btn btn-primary btn-full">Войти</button>
+        </form>
+
+        </div>
+{% endblock %}
