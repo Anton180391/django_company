@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: django_company_db
+    environment:
+      POSTGRES_DB: company_db
+      POSTGRES_USER: company_user
+      POSTGRES_PASSWORD: company_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U company_user -d company_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: django_company_web
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn company.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - media_data:/app/media
+      - static_data:/app/staticfiles
+    ports:
+      - "8000:8000"
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: company_db
+      DB_USER: company_user
+      DB_PASSWORD: company_password
+      DB_HOST: db
+      DB_PORT: 5432
+      SECRET_KEY: django-insecure-docker-secret-key-change-in-production
+      DEBUG: "True"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_data:
+  static_data:

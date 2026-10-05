@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -21,7 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure--&jn2n9nl)0s28jlde))5cef@pvp%!o7=f^p$47u_q^olnqq0r"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure--&jn2n9nl)0s28jlde))5cef@pvp%!o7=f^p$47u_q^olnqq0r",
+)
+
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+
+ALLOWED_HOSTS = ["*"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -42,6 +50,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
+    "drf_spectacular",
+    "corsheaders",
     # Свои приложения
     "workplaces",
     "employees",
@@ -49,6 +59,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # ← ДОБАВИТЬ
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -80,10 +91,16 @@ WSGI_APPLICATION = "company.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+import os
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("DB_NAME", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+        "HOST": os.environ.get("DB_HOST", ""),
+        "PORT": os.environ.get("DB_PORT", ""),
     }
 }
 
@@ -158,6 +175,7 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",  # ← ДОБАВИТЬ
 }
 
 SIMPLE_JWT = {
@@ -171,3 +189,37 @@ SIMPLE_JWT = {
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/home/"
+# ═══════════════════════════════════════════════════════════
+# SWAGGER / OpenAPI
+# ═══════════════════════════════════════════════════════════
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Company API",
+    "DESCRIPTION": "API для управления сотрудниками и рабочими местами",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+# ═══════════════════════════════════════════════════════════
+# CORS (для открытого API)
+# ═══════════════════════════════════════════════════════════
+
+CORS_ALLOW_ALL_ORIGINS = True  # В продакшене — указать конкретные домены
+CORS_ALLOW_CREDENTIALS = True
+# ═══════════════════════════════════════════════════════════
+# SWAGGER / OpenAPI
+# ═══════════════════════════════════════════════════════════
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Company API",
+    "DESCRIPTION": "API для управления сотрудниками и рабочими местами",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
+
+# ═══════════════════════════════════════════════════════════
+# CORS
+# ═══════════════════════════════════════════════════════════
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
